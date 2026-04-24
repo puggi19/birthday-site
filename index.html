@@ -14,11 +14,9 @@
       align-items:center;
       justify-content:center;
       text-align:center;
-      transition:background 5s ease;
       position:relative;
     }
 
-    /* 🎬 VIGNETTE (kenar kararma) */
     body::after{
       content:"";
       position:fixed;
@@ -28,7 +26,6 @@
       z-index:5;
     }
 
-    /* 🌫 FILM GRAIN */
     body::before{
       content:"";
       position:fixed;
@@ -37,15 +34,6 @@
       z-index:6;
       opacity:0.08;
       background-image:url('https://www.transparenttextures.com/patterns/noise.png');
-      animation:grain 1s steps(2) infinite;
-    }
-
-    @keyframes grain{
-      0%{transform:translate(0,0)}
-      25%{transform:translate(-2%,2%)}
-      50%{transform:translate(2%,-2%)}
-      75%{transform:translate(-2%,-1%)}
-      100%{transform:translate(0,0)}
     }
 
     #intro{
@@ -62,41 +50,23 @@
       font-size:38px;
       font-weight:bold;
       color:#e50914;
-      opacity:0;
-      transform:scale(0.8);
       animation:netflixIntro 2.8s ease forwards;
-      text-align:center;
-      padding:0 20px;
-      z-index:10;
     }
 
     @keyframes netflixIntro{
       0%{opacity:0;transform:scale(0.7);filter:blur(8px)}
-      30%{opacity:1;transform:scale(1.1);filter:blur(0)}
-      60%{opacity:1;transform:scale(1)}
-      100%{opacity:0;transform:scale(1.15)}
+      100%{opacity:0}
     }
 
     #lockScreen{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,0.85);
+      background:#000;
       display:none;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       z-index:20;
-      backdrop-filter:blur(6px);
-    }
-
-    #lockScreen h2{
-      text-shadow:0 0 20px rgba(255,255,255,0.2);
-    }
-
-    #lockScreen p{
-      opacity:0.7;
-      font-size:14px;
-      margin-top:5px;
     }
 
     input{
@@ -105,7 +75,6 @@
       border:none;
       text-align:center;
       margin-top:10px;
-      outline:none;
     }
 
     button{
@@ -116,80 +85,68 @@
       cursor:pointer;
     }
 
-    .box{max-width:650px;padding:25px;z-index:10;position:relative}
-
+    .box{max-width:650px;padding:25px;z-index:10}
     .hidden{display:none}
 
-    .show{animation:fadeIn 1.2s ease forwards}
+    .show{animation:fadeIn 1s ease}
 
     @keyframes fadeIn{
-      from{opacity:0;transform:translateY(10px)}
-      to{opacity:1;transform:translateY(0)}
+      from{opacity:0}
+      to{opacity:1}
     }
 
-    h1{
-      font-size:30px;
-      text-shadow:0 0 25px rgba(255,255,255,0.08);
+    #adminPanel{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:#111;
+      overflow:auto;
+      padding:20px;
+      z-index:999;
     }
 
-    p{
-      line-height:1.7;
-      opacity:0.9;
-      white-space:pre-line;
-    }
-
-    .fade-out{
-      animation:fadeOut 5s forwards;
-    }
-
-    @keyframes fadeOut{
-      from{opacity:1}
-      to{opacity:0}
+    .logItem{
+      background:#222;
+      padding:10px;
+      margin:10px 0;
+      border-radius:8px;
+      font-size:12px;
     }
   </style></head>
 <body><div id="intro">
-  <div id="logo">Doğum günün kutlu olsun<br>Çatlak Fıstık</div>
+  <div id="logo">Doğum günün kutlu olsun</div>
 </div><div id="lockScreen">
   <h2>Bu sayfa özel 🔐</h2>
-  <p>İpucu: 6 haneli bir tarih...</p>
   <input type="password" id="password" placeholder="Şifre" />
   <button onclick="checkPassword()">Giriş</button>
 </div><div class="box hidden" id="content">
   <h1>İyi ki doğdun 🎂</h1>
   <p id="story"></p>
+</div><div id="adminPanel">
+  <h2>Admin Log Panel</h2>
+  <div id="logs"></div>
 </div><script>
-const text = `Asya…
-
-Kısa bir zaman içinde hayatımda yer edinen nadir insanlardansın.
-
-Bazı insanlar uzun yıllar değil, kısa anlarla iz bırakır.
-Bizim hikâyemiz de biraz öyleydi.
-
-Her şey hızlı geçti ama geride kalan hisler kolay silinmiyor.
-
-Yeni yaşında sana sadece mutluluk değil, içini gerçekten rahat ettirecek başlangıçlar diliyorum.`;
-
+const text = "Asya...\nKısa bir hikaye...\nİyi ki doğdun.";
 let i = 0;
 
 function typeWriter(){
   if(i < text.length){
     document.getElementById("story").innerHTML += text.charAt(i);
     i++;
-    setTimeout(typeWriter, 35);
-  } else {
-    setTimeout(fadeOut, 1200);
+    setTimeout(typeWriter,30);
   }
-}
-
-function fadeOut(){
-  document.body.classList.add("fade-out");
 }
 
 window.onload = function(){
   setTimeout(()=>{
     document.getElementById("intro").style.display="none";
     document.getElementById("lockScreen").style.display="flex";
-  },2800);
+  },2000);
+
+  if(window.location.search.includes("admin")){
+    document.getElementById("adminPanel").style.display="block";
+    loadLogs();
+  }
 };
 
 function checkPassword(){
@@ -201,15 +158,41 @@ function checkPassword(){
     document.getElementById("content").classList.add("show");
 
     typeWriter();
-    openFullscreen();
+    logLogin();
   } else {
-    alert("Yanlış şifre ❌");
+    alert("Yanlış şifre");
   }
 }
 
-function openFullscreen(){
-  const e=document.documentElement;
-  if(e.requestFullscreen) e.requestFullscreen();
+// 📊 FIREBASE / LOG SYSTEM (REST)
+const DB_URL = "https://YOUR-FIREBASE.firebaseio.com/logs.json";
+
+function logLogin(){
+  const data = {
+    time: new Date().toISOString(),
+    device: navigator.userAgent
+  };
+
+  fetch(DB_URL, {
+    method:"POST",
+    body: JSON.stringify(data)
+  });
+}
+
+function loadLogs(){
+  fetch(DB_URL)
+    .then(res=>res.json())
+    .then(data=>{
+      const logsDiv=document.getElementById("logs");
+      logsDiv.innerHTML="";
+
+      for(let key in data){
+        const log=document.createElement("div");
+        log.className="logItem";
+        log.innerText=`Zaman: ${data[key].time}\nCihaz: ${data[key].device}`;
+        logsDiv.appendChild(log);
+      }
+    });
 }
 </script></body>
 </html>
