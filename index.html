@@ -33,9 +33,7 @@ body{
 }
 
 @keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(360deg);
-  }
+  to{transform:translateY(110vh) rotate(360deg);}
 }
 
 /* 🎬 INTRO */
@@ -92,18 +90,18 @@ button{
   line-height:1.6;
 }
 
-/* 🎧 MUSIC BUTTON */
+/* 🔇 MUSIC BUTTON (SADE) */
 #musicBtn{
   position:fixed;
   bottom:20px;
   right:20px;
+  z-index:10;
   padding:10px 15px;
   border:none;
   border-radius:10px;
-  background:#e50914;
+  background:#ff4d6d;
   color:white;
   cursor:pointer;
-  z-index:9999;
 }
 </style>
 </head>
@@ -137,12 +135,12 @@ button{
   <p id="text"></p>
 </div>
 
-<!-- 🎧 MUSIC BUTTON -->
-<button id="musicBtn" onclick="toggleMusic()">🎧 Müziği Başlat</button>
+<!-- 🔇 MUSIC BUTTON (SADECE DURDUR) -->
+<button id="musicBtn" onclick="stopMusic()">🔇 Müziği Durdur</button>
 
 <script>
 
-// 🎉 CONFETTI (SOFT)
+// 🎉 CONFETTI
 function createConfetti(){
   for(let i=0;i<45;i++){
     let c=document.createElement("div");
@@ -164,8 +162,8 @@ function randomColor(){
 
 createConfetti();
 
-// 💌 GELİŞTİRİLMİŞ MESAJ
-const message = `Asya...
+// 💌 MESSAGE
+const message = `****...
 
 Bazen bazı insanlar hayatımıza uzun süre kalmak için değil,
 çok kısa anlarda girip uzun izler bırakmak için gelir.
@@ -178,12 +176,6 @@ insanın içindeki en sakin yeri bile değiştirebiliyor.
 Seninle geçen o kısa zaman,
 uzun yıllara sığacak kadar değerliydi.
 
-Şimdi geriye baktığımda,
-iyi ki yollarımız kesişmiş diyorum.
-
-Ne olursa olsun,
-bu hikâyenin en güzel kısmında sen varsın.
-
 İyi ki doğdun...`;
 
 // ✍️ TYPE EFFECT
@@ -194,31 +186,32 @@ function type(){
       (message[i]==="\n"?"<br>":message[i]);
 
     i++;
-    setTimeout(type,80);
+    setTimeout(type,50);
   }
 }
 
-// 🖥️ FULLSCREEN
+// 🖥️ FULLSCREEN (login içinde çağrılıyor)
 function openFullscreen(){
-  let e=document.documentElement;
-  if(e.requestFullscreen)e.requestFullscreen();
+  let elem=document.documentElement;
+  if(elem.requestFullscreen){
+    elem.requestFullscreen().catch(()=>{});
+  }
 }
 
-// 🎧 MUSIC CONTROL
-let musicStarted=false;
+// 🎧 AUTO MUSIC TRY (SAYFA AÇILINCA)
 let music=document.getElementById("bgMusic");
 
-function toggleMusic(){
-  if(!musicStarted){
-    music.volume=0.4;
-    music.play().catch(()=>{});
-    musicStarted=true;
-    document.getElementById("musicBtn").innerText="⏸ Müziği Durdur";
-  } else {
-    music.pause();
-    musicStarted=false;
-    document.getElementById("musicBtn").innerText="🎧 Müziği Başlat";
+window.addEventListener("load", ()=>{
+  music.volume=0.4;
+  let p=music.play();
+  if(p!==undefined){
+    p.catch(()=>console.log("Autoplay blocked"));
   }
+});
+
+// 🔇 SADECE DURDUR
+function stopMusic(){
+  music.pause();
 }
 
 // 🚀 INTRO
@@ -247,7 +240,7 @@ function check(){
   }
 }
 
-// 🔥 FIREBASE
+// 🔥 FIREBASE LOG
 const DB_URL="https://dogum-d1b8a-default-rtdb.europe-west1.firebasedatabase.app/logs.json";
 
 function logUser(){
