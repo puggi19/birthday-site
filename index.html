@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Özel Sayfa</title>
 
+<!-- 🔥 NETFLIX TARZI FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
-  font-family:Arial;
   background:#000;
   color:#fff;
   height:100vh;
@@ -17,6 +19,7 @@ body{
   justify-content:center;
   text-align:center;
   overflow:hidden;
+  font-family:Arial;
 }
 
 /* 🎬 INTRO */
@@ -29,17 +32,17 @@ body{
   justify-content:center;
 }
 
-/* 🔥 NETFLIX LOGO STYLE */
+/* 🔥 NETFLIX STYLE LOGO */
 #logo{
-  font-size:38px;
-  font-weight:bold;
+  font-family:'Bebas Neue', sans-serif;
+  font-size:64px;
+  letter-spacing:3px;
   color:#e50914;
-  text-shadow:0 0 10px #e50914, 0 0 30px #e50914;
+  text-shadow:0 0 15px #e50914, 0 0 40px #e50914;
   animation:netflix 5s ease forwards;
-  padding:0 20px;
 }
 
-/* 🔥 NETFLIX ANIMATION */
+/* 🎬 NETFLIX ANIMATION */
 @keyframes netflix{
   0%{
     opacity:0;
@@ -48,17 +51,15 @@ body{
   }
   20%{
     opacity:1;
-    transform:scale(1.05);
+    transform:scale(1.1);
     filter:blur(2px);
   }
   40%{
     transform:scale(1);
     filter:blur(0);
-    text-shadow:0 0 20px #e50914, 0 0 50px #e50914;
+    text-shadow:0 0 25px #e50914, 0 0 60px #e50914;
   }
-  70%{
-    opacity:1;
-  }
+  70%{opacity:1;}
   100%{
     opacity:0;
     transform:scale(1.2);
@@ -98,7 +99,7 @@ button{
 <body>
 
 <div id="intro">
-  <div id="logo">Doğum günün kutlu olsun Çatlak fıstık</div>
+  <div id="logo">DOĞUM GÜNÜN KUTLU OLSUN</div>
 </div>
 
 <div id="lock">
@@ -136,7 +137,7 @@ bu hikâyenin bir yerinde sen hep özel kalacaksın.
 
 İyi ki doğdun.`;
 
-// ✍️ TYPE EFFECT
+// ⚡ DAHA HIZLI TYPE EFFECT
 let i = 0;
 function type(){
   if(i < message.length){
@@ -149,7 +150,7 @@ function type(){
     }
 
     i++;
-    setTimeout(type, 70);
+    setTimeout(type, 40); // 🔥 hızlandı
   }
 }
 
@@ -165,7 +166,7 @@ window.onload = ()=>{
 function check(){
   if(document.getElementById("pass").value === "290704"){
 
-    logUser(); // 🔥 Firebase
+    logUser();
 
     document.getElementById("lock").style.display="none";
     document.getElementById("content").style.display="block";
@@ -188,9 +189,7 @@ function logUser(){
         device:navigator.userAgent
       })
     });
-  }catch(e){
-    console.log("Firebase hata:", e);
-  }
+  }catch(e){}
 }
 
 </script>
