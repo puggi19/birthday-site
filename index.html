@@ -123,23 +123,48 @@ button{
 
 <script>
 
-const message = `Asya...
+<script>
 
-Bazen baz insanlar hayatmza çok uzun süreler boyunca deil,
-çok ksa anlarda girer ama etkisi uzun süreler kalr.
+const message = `İyi ki doğdun 🤍
 
-Sen de benim için öyle bir iz braktn.
+Asya...
 
-Ksa bir zaman içinde yaanan eyler,
-bazen uzun yllara bedel olur.
+Bazen bazı insanlar hayatımıza çok uzun süreler boyunca değil,
+çok kısa anlarda girer ama etkisi uzun süre kalır.
 
-Gülülerin, konumalarn ve braktn o his...
+Sen de benim için öyle bir iz bıraktın.
+
+Kısa bir zaman içinde yaşanan şeyler,
+bazen uzun bir zamana bedel olur.
+
+Gülüşlerin, konuşmaların ve bıraktığın o his...
 kolay kolay silinmiyor.
 
 Ne olursa olsun,
-bu hikâyenin bir yerinde sen hep özel kalacaksn.
+bu hikâyenin bir yerinde sen hep özel kalacaksın.
 
-yi ki dodun.`;
+Yeni yılın sana mutluluk ve şans getirsin.
+İyi ki doğdun.`;
+
+let i = 0;
+
+function type(){
+  if(i < message.length){
+    const char = message.charAt(i);
+
+    if(char === "\n"){
+      document.getElementById("text").innerHTML += "<br>";
+    } else {
+      document.getElementById("text").innerHTML += char;
+    }
+
+    i++;
+
+    setTimeout(type, 65); // 🔥 daha yavaş animasyon
+  }
+}
+
+</script>
 let i=0;
 
 function type(){
