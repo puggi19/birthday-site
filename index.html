@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Özel Sayfa</title>  <style>
+  <title>�zel Sayfa PRO</title>  <style>
     body{
       margin:0;
       font-family:Arial;
@@ -22,7 +22,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      background:radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.95) 100%);
+      background:radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.95) 100%);
       z-index:5;
     }
 
@@ -32,7 +32,7 @@
       inset:0;
       pointer-events:none;
       z-index:6;
-      opacity:0.08;
+      opacity:0.07;
       background-image:url('https://www.transparenttextures.com/patterns/noise.png');
     }
 
@@ -47,13 +47,15 @@
     }
 
     #logo{
-      font-size:38px;
+      font-size:36px;
       font-weight:bold;
       color:#e50914;
-      animation:netflixIntro 2.8s ease forwards;
+      animation:intro 2.5s ease forwards;
+      text-align:center;
+      padding:0 20px;
     }
 
-    @keyframes netflixIntro{
+    @keyframes intro{
       0%{opacity:0;transform:scale(0.7);filter:blur(8px)}
       100%{opacity:0}
     }
@@ -75,6 +77,7 @@
       border:none;
       text-align:center;
       margin-top:10px;
+      outline:none;
     }
 
     button{
@@ -85,9 +88,14 @@
       cursor:pointer;
     }
 
-    .box{max-width:650px;padding:25px;z-index:10}
-    .hidden{display:none}
+    .box{
+      max-width:650px;
+      padding:25px;
+      z-index:10;
+      position:relative;
+    }
 
+    .hidden{display:none}
     .show{animation:fadeIn 1s ease}
 
     @keyframes fadeIn{
@@ -105,7 +113,7 @@
       z-index:999;
     }
 
-    .logItem{
+    .log{
       background:#222;
       padding:10px;
       margin:10px 0;
@@ -114,19 +122,21 @@
     }
   </style></head>
 <body><div id="intro">
-  <div id="logo">Doğum günün kutlu olsun</div>
+  <div id="logo">Doum g�n�n kutlu olsun</div>
 </div><div id="lockScreen">
-  <h2>Bu sayfa özel 🔐</h2>
-  <input type="password" id="password" placeholder="Şifre" />
-  <button onclick="checkPassword()">Giriş</button>
+  <h2>Bu sayfa �zel </h2>
+  <p>pucu: 6 haneli tarih</p>
+  <input type="password" id="password" placeholder="ifre" />
+  <button onclick="login()">Giri</button>
 </div><div class="box hidden" id="content">
-  <h1>İyi ki doğdun 🎂</h1>
+  <h1>yi ki dodun </h1>
   <p id="story"></p>
 </div><div id="adminPanel">
   <h2>Admin Log Panel</h2>
   <div id="logs"></div>
 </div><script>
-const text = "Asya...\nKısa bir hikaye...\nİyi ki doğdun.";
+const text = `Asya...\n\nKsa bir hikaye gibi ama etkili bir iz braktn.\n\nyi ki dodun.`;
+
 let i = 0;
 
 function typeWriter(){
@@ -149,25 +159,31 @@ window.onload = function(){
   }
 };
 
-function checkPassword(){
-  const pass=document.getElementById("password").value;
+function login(){
+  const pass = document.getElementById("password").value;
 
-  if(pass==="290704"){
+  if(pass === "290704"){
     document.getElementById("lockScreen").style.display="none";
     document.getElementById("content").classList.remove("hidden");
     document.getElementById("content").classList.add("show");
 
     typeWriter();
-    logLogin();
+    logUser();
+    openFullscreen();
   } else {
-    alert("Yanlış şifre");
+    alert("Yanl ifre ");
   }
 }
 
-// 📊 FIREBASE / LOG SYSTEM (REST)
-const DB_URL = "https://YOUR-FIREBASE.firebaseio.com/logs.json";
+function openFullscreen(){
+  const e=document.documentElement;
+  if(e.requestFullscreen) e.requestFullscreen();
+}
 
-function logLogin(){
+/* LOG SYSTEM */
+const DB_URL = "https://YOUR-PROJECT.firebaseio.com/logs.json";
+
+function logUser(){
   const data = {
     time: new Date().toISOString(),
     device: navigator.userAgent
@@ -181,16 +197,16 @@ function logLogin(){
 
 function loadLogs(){
   fetch(DB_URL)
-    .then(res=>res.json())
+    .then(r=>r.json())
     .then(data=>{
-      const logsDiv=document.getElementById("logs");
-      logsDiv.innerHTML="";
+      const logs=document.getElementById("logs");
+      logs.innerHTML="";
 
-      for(let key in data){
-        const log=document.createElement("div");
-        log.className="logItem";
-        log.innerText=`Zaman: ${data[key].time}\nCihaz: ${data[key].device}`;
-        logsDiv.appendChild(log);
+      for(let k in data){
+        const div=document.createElement("div");
+        div.className="log";
+        div.innerText = `Zaman: ${data[k].time}\nCihaz: ${data[k].device}`;
+        logs.appendChild(div);
       }
     });
 }
