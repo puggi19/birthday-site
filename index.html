@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- 📱 iPhone zoom + viewport fix -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Özel Sayfa</title>
@@ -25,21 +24,6 @@ body{
   -webkit-text-size-adjust:100%;
 }
 
-/* 🎉 CONFETTI */
-.confetti{
-  position:fixed;
-  width:6px;
-  height:6px;
-  top:-10px;
-  opacity:0.5;
-  animation:fall linear infinite;
-  z-index:-1;
-}
-
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg);}
-}
-
 /* 🎬 INTRO */
 #intro{
   position:fixed;
@@ -50,7 +34,7 @@ body{
   justify-content:center;
 }
 
-/* 📱 FIXED LOGO (iPhone taşma çözümü) */
+/* 📱 LOGO SAFE */
 #logo{
   font-family:'Bebas Neue', sans-serif;
   font-size:clamp(28px, 8vw, 60px);
@@ -90,11 +74,11 @@ button{
   cursor:pointer;
 }
 
-/* 📜 CONTENT */
+/* 📜 CONTENT (FIXED LAYOUT) */
 #content{
   display:none;
   max-width:600px;
-  padding:20px;
+  padding:80px 20px 20px 20px; /* 🔥 ÜST BOŞLUK ARTTI */
   line-height:1.7;
   word-break:break-word;
   -webkit-font-smoothing:antialiased;
@@ -116,12 +100,12 @@ button{
   opacity:0.4;
 }
 
-/* 🎧 MUSIC BUTTON */
+/* 🎧 MUSIC BUTTON (SAFE POSITION) */
 #musicBtn{
   position:fixed;
-  bottom:20px;
+  bottom:30px;
   right:20px;
-  z-index:10;
+  z-index:999;
   padding:10px 15px;
   border:none;
   border-radius:10px;
@@ -146,7 +130,7 @@ button{
   z-index:20;
 }
 
-/* 🌑 FINAL BLACK SCREEN */
+/* 🌑 BLACK FADE */
 #fadeBlack{
   position:fixed;
   inset:0;
@@ -161,9 +145,7 @@ button{
 
 <body>
 
-<div id="confetti"></div>
-
-<audio id="bgMusic" loop preload="auto">
+<audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -173,7 +155,7 @@ button{
 
 <div id="lock">
   <h2>Bu sayfa sana özel 🔐</h2>
-  <p style="font-size:12px;opacity:0.7">İpucu: Eski telefon şifren (4 haneli)</p>
+  <p style="font-size:12px;opacity:0.7">İpucu: 4 haneli eski şifre</p>
   <input id="pass" type="password" placeholder="Şifre">
   <button onclick="check()">Giriş</button>
 </div>
@@ -193,28 +175,6 @@ button{
 
 <script>
 
-// 🎉 CONFETTI
-function createConfetti(){
-  for(let i=0;i<45;i++){
-    let c=document.createElement("div");
-    c.classList.add("confetti");
-
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=randomColor();
-    c.style.animationDuration=(4+Math.random()*4)+"s";
-    c.style.animationDelay=Math.random()*2+"s";
-
-    document.body.appendChild(c);
-  }
-}
-
-function randomColor(){
-  const colors=["#ff4d6d","#ffd166","#06d6a0","#4cc9f0","#f72585","#aaa"];
-  return colors[Math.floor(Math.random()*colors.length)];
-}
-
-createConfetti();
-
 // 💌 MESSAGE
 const message = `Asya...
 
@@ -230,73 +190,62 @@ insanın içindeki en ufak yeri bile değiştirebiliyor.
 Seninle geçen o kısa zaman,
 uzun yıllara sığacak kadar değerliydi.
 
-Bir daha seni rahatsız etmeyeceğimi söylemiştim ama doğum günün senin için önemli o yüzden yazmak istedim. Rahatsız ettiysem gerçekten özür dilerim.
+Bir daha seni rahatsız etmeyeceğimi söylemiştim ama doğum günün senin için önemli olduğu için yazmak istedim. Rahatsız ettiysem gerçekten özür dilerim.
 
 İyi ki doğdun çatlak fıstık...`;
 
-// ✍️ TYPE EFFECT
-let i = 0;
-let textEl = document.getElementById("text");
+// ✍️ TYPE
+let i=0;
+let textEl=document.getElementById("text");
 
 function type(){
-  if(i < message.length){
-    let char = message[i];
-    if(char === "\n"){
-      textEl.innerHTML += "<br>";
-    } else {
-      textEl.innerHTML += char;
-    }
+  if(i<message.length){
+    let c=message[i];
+    textEl.innerHTML += (c === "\n") ? "<br>" : c;
     i++;
     setTimeout(type,60);
   } else {
-    setTimeout(showEnding, 2500);
+    setTimeout(showEnding,2500);
   }
 }
 
-// 🎬 ENDING
+// 🎬 END EFFECT
 function showEnding(){
-  const end = document.getElementById("ending");
-  const content = document.getElementById("content");
-  const fade = document.getElementById("fadeBlack");
+  const end=document.getElementById("ending");
+  const content=document.getElementById("content");
+  const fade=document.getElementById("fadeBlack");
 
   content.classList.add("end-effect");
 
-  setTimeout(()=>{
-    end.style.opacity = 1;
-  },800);
-
-  setTimeout(()=>{
-    fade.style.opacity = 1;
-  },2500);
-}
-
-// 🖥️ FULLSCREEN (iOS SAFE)
-function openFullscreen(){
-  let elem=document.documentElement;
-
-  const request = elem.requestFullscreen ||
-                  elem.webkitRequestFullscreen ||
-                  elem.msRequestFullscreen;
-
-  if(request){
-    request.call(elem).catch(()=>{});
-  }
+  setTimeout(()=>{ end.style.opacity=1; },800);
+  setTimeout(()=>{ fade.style.opacity=1; },2500);
 }
 
 // 🎧 MUSIC
 let music=document.getElementById("bgMusic");
-let musicStarted=false;
+let playing=false;
 
 function toggleMusic(){
-  if(!musicStarted){
+  if(!playing){
     music.volume=0.4;
     music.play().catch(()=>{});
-    musicStarted=true;
+    playing=true;
     document.getElementById("musicBtn").innerText="⏸ Müziği Durdur";
   } else {
     music.pause();
-    musicStarted=false;
+    playing=false;
     document.getElementById("musicBtn").innerText="🎧 Müziği Başlat";
+  }
+}
+
+// 🔐 LOGIN
+function check(){
+  if(document.getElementById("pass").value==="3007"){
+    document.getElementById("lock").style.display="none";
+    document.getElementById("content").style.display="block";
+    type();
+  } else {
+    alert("Yanlış şifre ❌");
   }
 }
 
@@ -307,39 +256,6 @@ window.onload=()=>{
     document.getElementById("lock").style.display="flex";
   },5000);
 };
-
-// 🔐 LOGIN
-function check(){
-  if(document.getElementById("pass").value==="3007"){
-
-    logUser();
-    openFullscreen();
-
-    document.getElementById("lock").style.display="none";
-    document.getElementById("content").style.display="block";
-
-    type();
-
-  } else {
-    alert("Yanlış şifre ❌");
-  }
-}
-
-// 📊 FIREBASE LOG
-const DB_URL="https://dogum-d1b8a-default-rtdb.europe-west1.firebasedatabase.app/logs.json";
-
-function logUser(){
-  fetch(DB_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      time:new Date().toLocaleString(),
-      device:navigator.userAgent,
-      language:navigator.language,
-      screen:`${window.innerWidth}x${window.innerHeight}`,
-      platform:navigator.platform
-    })
-  }).catch(()=>{});
-}
 
 </script>
 
