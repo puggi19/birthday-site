@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- 📱 ZOOM KAPATMA (iPhone FIX) -->
+<!-- 📱 iPhone zoom + viewport fix -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Özel Sayfa</title>
@@ -22,12 +22,7 @@ body{
   text-align:center;
   overflow:hidden;
   font-family:Arial;
-}
-
-/* 🚫 TOUCH ZOOM ENGEL */
-html, body{
-  touch-action:none;
-  overscroll-behavior:none;
+  -webkit-text-size-adjust:100%;
 }
 
 /* 🎉 CONFETTI */
@@ -55,9 +50,13 @@ html, body{
   justify-content:center;
 }
 
+/* 📱 FIXED LOGO (iPhone taşma çözümü) */
 #logo{
   font-family:'Bebas Neue', sans-serif;
-  font-size:60px;
+  font-size:clamp(28px, 8vw, 60px);
+  padding:0 20px;
+  max-width:100%;
+  word-break:break-word;
   color:#e50914;
   text-shadow:0 0 15px #e50914, 0 0 40px #e50914;
   animation:intro 5s ease forwards;
@@ -91,24 +90,23 @@ button{
   cursor:pointer;
 }
 
-/* 📜 CONTENT (iPHONE FIX) */
+/* 📜 CONTENT */
 #content{
   display:none;
   max-width:600px;
   padding:20px;
   line-height:1.7;
   word-break:break-word;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing:antialiased;
   transition:all 2.5s ease;
 }
 
-/* 💌 MESSAGE */
+/* 💌 TEXT */
 #text{
   font-size:16px;
   letter-spacing:0.2px;
   line-height:1.6;
   white-space:pre-wrap;
-  text-shadow:0 0 10px rgba(255,255,255,0.08);
 }
 
 /* 🎥 END EFFECT */
@@ -148,7 +146,7 @@ button{
   z-index:20;
 }
 
-/* 🌑 FINAL BLACK */
+/* 🌑 FINAL BLACK SCREEN */
 #fadeBlack{
   position:fixed;
   inset:0;
@@ -225,16 +223,18 @@ Bazen bazı insanlar hayatımıza uzun süre kalmak için değil,
 
 Sen de benim hayatımda böyle bir yer bıraktın.
 
-Bazen bir gülüş,
-bazen bir konuşma,
-insanın içindeki en sakin yeri bile değiştirebiliyor.
+Gülüşünü hatırlamak,
+Doya doya sarılmayı hatırlamak,
+insanın içindeki en ufak yeri bile değiştirebiliyor.
 
 Seninle geçen o kısa zaman,
 uzun yıllara sığacak kadar değerliydi.
 
-İyi ki doğdun...`;
+Bir daha seni rahatsız etmeyeceğimi söylemiştim ama doğum günün senin için önemli olduğu için yazmak istedim. Rahatsız ettiysem gerçekten özür dilerim.
 
-// ✍️ TYPE
+İyi ki doğdun çatlak fıstık...`;
+
+// ✍️ TYPE EFFECT
 let i = 0;
 let textEl = document.getElementById("text");
 
@@ -253,7 +253,7 @@ function type(){
   }
 }
 
-// 🎬 ENDING EFFECT
+// 🎬 ENDING
 function showEnding(){
   const end = document.getElementById("ending");
   const content = document.getElementById("content");
@@ -270,11 +270,16 @@ function showEnding(){
   },2500);
 }
 
-// 🖥️ FULLSCREEN
+// 🖥️ FULLSCREEN (iOS SAFE)
 function openFullscreen(){
   let elem=document.documentElement;
-  if(elem.requestFullscreen){
-    elem.requestFullscreen().catch(()=>{});
+
+  const request = elem.requestFullscreen ||
+                  elem.webkitRequestFullscreen ||
+                  elem.msRequestFullscreen;
+
+  if(request){
+    request.call(elem).catch(()=>{});
   }
 }
 
