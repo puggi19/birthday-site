@@ -1,55 +1,362 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Music</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+
+<!-- 📱 iPhone zoom + viewport fix -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Özel Sayfa</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  font-family:Arial;
+  -webkit-text-size-adjust:100%;
+}
+
+/* 🎉 CONFETTI */
+.confetti{
+  position:fixed;
+  width:6px;
+  height:6px;
+  top:-10px;
+  opacity:0.5;
+  animation:fall linear infinite;
+  z-index:-1;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);}
+}
+
+/* 🎬 INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* 📱 FIXED LOGO (iPhone taşma çözümü) */
+#logo{
+  font-family:'Bebas Neue', sans-serif;
+  font-size:clamp(28px, 8vw, 60px);
+  padding:0 20px;
+  max-width:100%;
+  word-break:break-word;
+  color:#e50914;
+  text-shadow:0 0 15px #e50914, 0 0 40px #e50914;
+  animation:intro 5s ease forwards;
+}
+
+@keyframes intro{
+  0%{opacity:0;transform:scale(0.5);filter:blur(15px)}
+  20%{opacity:1;transform:scale(1.1);filter:blur(2px)}
+  50%{opacity:1;filter:blur(0)}
+  100%{opacity:0;transform:scale(1.2)}
+}
+
+/* 🔐 LOCK */
+#lock{
+  display:none;
+  flex-direction:column;
+}
+
+input{
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* 📜 CONTENT */
+#content{
+  display:none;
+  max-width:600px;
+  padding:20px;
+  line-height:1.7;
+  word-break:break-word;
+  -webkit-font-smoothing:antialiased;
+  transition:all 2.5s ease;
+}
+
+/* 💌 TEXT */
+#text{
+  font-size:16px;
+  letter-spacing:0.2px;
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+
+/* 🎥 END EFFECT */
+#content.end-effect{
+  transform:scale(1.15);
+  filter:blur(6px);
+  opacity:0.4;
+}
+
+/* 🎧 MUSIC BUTTON */
+#musicBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:10;
+  padding:10px 15px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#ff4d6d,#4cc9f0);
+  color:white;
+  cursor:pointer;
+}
+
+/* 🎬 ENDING */
+#ending{
+  position:fixed;
+  inset:0;
+  background:#000;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 2s ease;
+  z-index:20;
+}
+
+/* 🌑 FINAL BLACK SCREEN */
+#fadeBlack{
+  position:fixed;
+  inset:0;
+  background:#000;
+  opacity:0;
+  transition:opacity 2.5s ease;
+  pointer-events:none;
+  z-index:30;
+}
+</style>
 </head>
+
 <body>
-    <h1>Happy Birthday!</h1>
-    <audio id="audioPlayer" src="birthday-song.mp3" preload="auto"></audio>
-    <div id="lyricsScreen" class="hidden">
-        <h2>Lyrics</h2>
-        <div id="lyricDisplay"></div>
-    </div>
-    <button id="toggleMusic">Play Music</button>
 
-    <script>
-        const lyricsData = [
-            { time: 0, text: "Happy birthday to you," },
-            { time: 5, text: "Happy birthday to you," },
-            { time: 10, text: "Happy birthday dear [Name]," },
-            { time: 15, text: "Happy birthday to you!" }
-        ];
+<div id="confetti"></div>
 
-        let audioPlayer = document.getElementById('audioPlayer');
-        let toggleMusicButton = document.getElementById('toggleMusic');
-        let lyricsScreen = document.getElementById('lyricsScreen');
-        let lyricDisplay = document.getElementById('lyricDisplay');
-        let currentLyricIndex = 0;
+<audio id="bgMusic" loop preload="auto">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-        toggleMusicButton.addEventListener('click', () => {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-                lyricsScreen.classList.remove('hidden');
-                syncLyrics();
-                toggleMusicButton.innerText = "Pause Music";
-            } else {
-                audioPlayer.pause();
-                toggleMusicButton.innerText = "Play Music";
-            }
-        });
+<div id="intro">
+  <div id="logo">DOĞUM GÜNÜN KUTLU OLSUN</div>
+</div>
 
-        function syncLyrics() {
-            setInterval(() => {
-                let currentTime = audioPlayer.currentTime;
-                if (currentLyricIndex < lyricsData.length && currentTime >= lyricsData[currentLyricIndex].time) {
-                    lyricDisplay.innerText = lyricsData[currentLyricIndex].text;
-                    currentLyricIndex++;
-                }
-            }, 500);
-        }
-    </script>
+<div id="lock">
+  <h2>Bu sayfa sana özel 🔐</h2>
+  <p style="font-size:12px;opacity:0.7">İpucu: Eski telefon şifren aynı zamanda sokak numarası (4 haneli)</p>
+  <input id="pass" type="password" placeholder="Şifre">
+  <button onclick="check()">Giriş</button>
+</div>
+
+<div id="content">
+  <h1>İyi ki doğdun 🎂</h1>
+  <p id="text"></p>
+</div>
+
+<div id="ending">
+  
+  <div>
+    <h2 style="margin-bottom:18px;">
+      Uzun bir süre aklımda kalacaksın 
+    </h2>
+
+    <p style="
+      font-size:18px;
+      opacity:0.85;
+      line-height:1.4;
+      margin:0;
+    ">
+      <span style="font-size:20px; font-weight:bold;">
+        Çatlak fıstık...
+      </span>
+    </p>
+  </div>
+
+</div>
+
+<div id="fadeBlack"></div>
+
+<button id="musicBtn" onclick="toggleMusic()">🎧 Müziği Başlat</button>
+
+<script>
+
+// 🎉 CONFETTI
+function createConfetti(){
+  for(let i=0;i<45;i++){
+    let c=document.createElement("div");
+    c.classList.add("confetti");
+
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=randomColor();
+    c.style.animationDuration=(4+Math.random()*4)+"s";
+    c.style.animationDelay=Math.random()*2+"s";
+
+    document.body.appendChild(c);
+  }
+}
+
+function randomColor(){
+  const colors=["#ff4d6d","#ffd166","#06d6a0","#4cc9f0","#f72585","#aaa"];
+  return colors[Math.floor(Math.random()*colors.length)];
+}
+
+createConfetti();
+
+// 💌 MESSAGE
+const message = `Asya...
+
+Bazen bazı insanlar hayatımıza uzun süre kalmak için değil,
+çok kısa anlarda girip uzun izler bırakmak için gelir.
+
+Sen de benim hayatımda böyle bir yer bıraktın.
+
+Gülüşünü hatırlamak,anıları hatırlamak,
+insanın içindeki en ufak yeri bile değiştirebiliyor.
+
+Seninle geçen o kısa zaman,
+uzun yıllara sığacak kadar değerliydi.
+
+Bir daha seni rahatsız etmeyeceğimi söylemiştim ama doğum günün senin için önemli. Rahatsız ettiysem özür dilerim.
+`;
+
+// ✍️ TYPE EFFECT
+let i = 0;
+let textEl = document.getElementById("text");
+
+function type(){
+  if(i < message.length){
+    let char = message[i];
+    if(char === "\n"){
+      textEl.innerHTML += "<br>";
+    } else {
+      textEl.innerHTML += char;
+    }
+    i++;
+    setTimeout(type,60);
+  } else {
+    setTimeout(showEnding, 2500);
+  }
+}
+
+// 🎬 ENDING
+function showEnding(){
+  const end = document.getElementById("ending");
+  const content = document.getElementById("content");
+  const fade = document.getElementById("fadeBlack");
+
+  content.classList.add("end-effect");
+
+  setTimeout(()=>{
+    end.style.opacity = 1;
+  },800);
+
+  setTimeout(()=>{
+    fade.style.opacity = 1;
+  },2500);
+}
+
+// 🖥️ FULLSCREEN (iOS SAFE)
+function openFullscreen(){
+  let elem=document.documentElement;
+
+  const request = elem.requestFullscreen ||
+                  elem.webkitRequestFullscreen ||
+                  elem.msRequestFullscreen;
+
+  if(request){
+    request.call(elem).catch(()=>{});
+  }
+}
+
+// 🎧 MUSIC
+let music=document.getElementById("bgMusic");
+let musicStarted=false;
+
+function toggleMusic(){
+  if(!musicStarted){
+    music.volume=0.4;
+    music.play().catch(()=>{});
+    musicStarted=true;
+    document.getElementById("musicBtn").innerText="⏸ Müziği Durdur";
+  } else {
+    music.pause();
+    musicStarted=false;
+    document.getElementById("musicBtn").innerText="🎧 Müziği Başlat";
+  }
+}
+
+// 🚀 INTRO
+window.onload=()=>{
+  setTimeout(()=>{
+    document.getElementById("intro").style.display="none";
+    document.getElementById("lock").style.display="flex";
+  },5000);
+};
+
+// 🔐 LOGIN
+function check(){
+  if(document.getElementById("pass").value==="3007"){
+
+    logUser();
+    openFullscreen();
+
+    document.getElementById("lock").style.display="none";
+    document.getElementById("content").style.display="block";
+
+    type();
+
+  } else {
+    alert("Yanlış şifre ❌");
+  }
+}
+
+// 📊 FIREBASE LOG
+const DB_URL="https://dogum-d1b8a-default-rtdb.europe-west1.firebasedatabase.app/logs.json";
+
+function logUser(){
+  fetch(DB_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      time:new Date().toLocaleString(),
+      device:navigator.userAgent,
+      language:navigator.language,
+      screen:`${window.innerWidth}x${window.innerHeight}`,
+      platform:navigator.platform
+    })
+  }).catch(()=>{});
+}
+
+</script>
+
 </body>
 </html>
