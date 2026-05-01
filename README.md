@@ -1,3 +1,4 @@
  aklıma böyle bir şey yapmak geldi. 
 
-              24.04.2026
+              01.05.2026
+             
