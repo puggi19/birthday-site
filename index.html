@@ -273,10 +273,13 @@ button{
   </p>
 
   <input
-    id="pass"
-    type="password"
-    placeholder="Şifre"
-  >
+  id="pass"
+  type="password"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="4"
+  placeholder="Şifre"
+>
 
   <button onclick="check()">
     Giriş
