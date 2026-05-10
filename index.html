@@ -87,36 +87,6 @@ body{
   100%{opacity:0.2; transform:scale(1);}
 }
 
-/* ☄️ KAYAN YILDIZ */
-.shooting-star{
-  position:fixed;
-  width:2px;
-  height:2px;
-  background:white;
-  border-radius:50%;
-  box-shadow:0 0 8px white, 0 0 18px white;
-  pointer-events:none;
-  z-index:15;
-  opacity:0;
-}
-
-.shooting-star::before{
-  content:"";
-  position:absolute;
-  top:50%;
-  left:-160px;
-  width:160px;
-  height:2px;
-  transform:translateY(-50%);
-  background:linear-gradient(
-    90deg,
-    rgba(255,255,255,0),
-    rgba(255,255,255,0.15),
-    rgba(255,255,255,0.9)
-  );
-  border-radius:999px;
-  filter:blur(1px);
-}
 
 /* 🎉 CONFETTI */
 .confetti{
@@ -399,14 +369,23 @@ const DB_URL =
 let logCounter = 1;
 let isRepeatVisit = false;
 
+// 📅 Oturum bilgisi
+const sessionDateObj = new Date();
+
+const sessionDate =
+  sessionDateObj.getFullYear() + "-" +
+  String(sessionDateObj.getMonth()+1).padStart(2,"0") + "-" +
+  String(sessionDateObj.getDate()).padStart(2,"0");
+
+const sessionId =
+  "oturum_" +
+  String(sessionDateObj.getHours()).padStart(2,"0") + "-" +
+  String(sessionDateObj.getMinutes()).padStart(2,"0") + "-" +
+  String(sessionDateObj.getSeconds()).padStart(2,"0");
+
 function logAction(actionName, extraData = {}) {
 
   const now = new Date();
-
-  const tarih =
-    now.getFullYear() + "-" +
-    String(now.getMonth()+1).padStart(2,"0") + "-" +
-    String(now.getDate()).padStart(2,"0");
 
   const saat =
     String(now.getHours()).padStart(2,"0") + "-" +
@@ -419,14 +398,17 @@ function logAction(actionName, extraData = {}) {
     .replace(/[^\wğüşıöçĞÜŞİÖÇ_-]/g,"");
 
   const key =
-    `${tarih}_${saat}_${String(logCounter).padStart(2,"0")}_${safeAction}`;
+    `${String(logCounter).padStart(2,"0")}_${safeAction}_${saat}`;
 
   logCounter++;
 
-  fetch(`${DB_URL}/${encodeURIComponent(key)}.json`,{
+  fetch(`${DB_URL}/${sessionDate}/${sessionId}/${encodeURIComponent(key)}.json`,{
     method:"PUT",
     body:JSON.stringify({
-      time:now.toLocaleString('tr-TR'),
+      date:sessionDate,
+      time:saat,
+      fullTime:now.toLocaleString('tr-TR'),
+      session:sessionId,
       action:actionName,
       detail:extraData,
       device:navigator.userAgent,
@@ -572,64 +554,6 @@ function resetStars(){
 document.addEventListener("touchend",resetStars);
 document.addEventListener("mouseleave",resetStars);
 
-// ☄️ KAYAN YILDIZ
-function createShootingStar(){
-
-  const star =
-  document.createElement("div");
-
-  star.classList.add("shooting-star");
-
-  const startX =
-  20 + Math.random()*90;
-
-  const startY =
-  Math.random()*55;
-
-  const moveX =
-  -120 - Math.random()*50;
-
-  const moveY =
-  60 + Math.random()*40;
-
-  const duration =
-  3000 + Math.random()*2500;
-
-  star.style.left =
-  startX + "vw";
-
-  star.style.top =
-  startY + "vh";
-
-  star.animate([
-    {
-      opacity:0,
-      transform:"translate3d(0,0,0) rotate(-25deg) scale(0.8)"
-    },
-    {
-      opacity:1,
-      offset:0.12
-    },
-    {
-      opacity:1,
-      offset:0.75
-    },
-    {
-      opacity:0,
-      transform:`translate3d(${moveX}vw,${moveY}vh,0) rotate(-25deg) scale(1)`
-    }
-  ],{
-    duration:duration,
-    easing:"linear",
-    fill:"forwards"
-  });
-
-  document.body.appendChild(star);
-
-  setTimeout(()=>{
-    star.remove();
-  },duration + 200);
-}
 
 // 🎉 CONFETTI
 function createConfetti(){
@@ -696,7 +620,45 @@ let i = 0;
 let textEl =
 document.getElementById("text");
 
+let typeTimer = null;
+
+function resetTyping(){
+
+  if(typeTimer){
+    clearTimeout(typeTimer);
+    typeTimer = null;
+  }
+
+  i = 0;
+  textEl.innerHTML = "";
+}
+
 function type(){
+
+  if(i < message.length){
+
+    let char =
+    message[i];
+
+    if(char === "\n"){
+      textEl.innerHTML += "<br>";
+    }else{
+      textEl.innerHTML += char;
+    }
+
+    i++;
+
+    typeTimer = setTimeout(type,90);
+
+  }else{
+
+    typeTimer = null;
+
+    logAction("Mesaj Okundu / Daktilo Bitti");
+
+    setTimeout(showEnding,2500);
+  }
+}
 
   if(i < message.length){
 
@@ -767,8 +729,6 @@ function showEnding(){
 }
 
 // 🌌 STARS SCREEN
-let shootingIntervalStarted = false;
-
 function showStars(){
 
   document
@@ -783,17 +743,6 @@ function showStars(){
   stars.style.opacity = 1;
 
   logAction("Yıldız Ekranı Açıldı");
-
-  if(!shootingIntervalStarted){
-
-    shootingIntervalStarted = true;
-
-    setInterval(()=>{
-
-      createShootingStar();
-
-    },2500);
-  }
 }
 
 // 🔁 REPEAT OPTIONS
@@ -817,8 +766,7 @@ function watchMessageAgain(){
   document.getElementById("content")
   .style.display = "flex";
 
-  i = 0;
-  textEl.innerHTML = "";
+  resetTyping();
 
   logAction("Tekrar Ziyaret / Mesaj Tekrar İzle");
 
@@ -926,8 +874,7 @@ music.addEventListener("ended",()=>{
       document.webkitExitFullscreen();
     }
 
-    i = 0;
-    textEl.innerHTML = "";
+   resetTyping();
 
     music.currentTime = 0;
     musicStarted = false;
