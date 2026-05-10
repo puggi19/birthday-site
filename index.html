@@ -29,8 +29,6 @@ body{
   -webkit-text-size-adjust:100%;
 }
 
-
-
 /* 🌌 YILDIZLAR */
 #stars{
   position:fixed;
@@ -41,29 +39,52 @@ body{
   z-index:5;
 }
 
-.star{
-  transition:
-  transform 0.6s ease,
-  opacity 0.6s ease;
+.star-wrap{
   position:absolute;
+  transition:transform 0.5s ease;
+}
+
+.star{
   background:white;
   border-radius:50%;
   animation:twinkle linear infinite;
 }
 
 @keyframes twinkle{
-  0%{
-    opacity:0.2;
-    transform:scale(1);
-  }
-  50%{
-    opacity:1;
-    transform:scale(1.4);
-  }
-  100%{
-    opacity:0.2;
-    transform:scale(1);
-  }
+  0%{opacity:0.2; transform:scale(1);}
+  50%{opacity:1; transform:scale(1.4);}
+  100%{opacity:0.2; transform:scale(1);}
+}
+
+/* ☄️ KAYAN YILDIZ */
+.shooting-star{
+  position:fixed;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 0 8px white, 0 0 18px white;
+  pointer-events:none;
+  z-index:15;
+  opacity:0;
+}
+
+.shooting-star::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:-160px;
+  width:160px;
+  height:2px;
+  transform:translateY(-50%);
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.9)
+  );
+  border-radius:999px;
+  filter:blur(1px);
 }
 
 /* 🎉 CONFETTI */
@@ -94,7 +115,6 @@ body{
   justify-content:center;
 }
 
-/* 📱 FIXED LOGO */
 #logo{
   font-family:'Bebas Neue', sans-serif;
   font-size:clamp(28px,8vw,60px);
@@ -105,32 +125,14 @@ body{
   text-shadow:
     0 0 15px #e50914,
     0 0 40px #e50914;
-
   animation:introAnim 5s ease forwards;
 }
 
 @keyframes introAnim{
-  0%{
-    opacity:0;
-    transform:scale(0.5);
-    filter:blur(15px);
-  }
-
-  20%{
-    opacity:1;
-    transform:scale(1.1);
-    filter:blur(2px);
-  }
-
-  50%{
-    opacity:1;
-    filter:blur(0);
-  }
-
-  100%{
-    opacity:0;
-    transform:scale(1.2);
-  }
+  0%{opacity:0; transform:scale(0.5); filter:blur(15px);}
+  20%{opacity:1; transform:scale(1.1); filter:blur(2px);}
+  50%{opacity:1; filter:blur(0);}
+  100%{opacity:0; transform:scale(1.2);}
 }
 
 /* 🔐 LOCK */
@@ -164,8 +166,7 @@ button{
   flex-direction:column;
   text-align:center;
   padding:20px;
-  /* Yumuşak bir geçiş için eklendi */
-  transition: all 2.5s ease-in-out; 
+  transition:all 2.5s ease-in-out; 
 }
 
 /* 💌 TEXT */
@@ -178,11 +179,11 @@ button{
   text-align:center;
 }
 
-/* 🎥 END EFFECT (Mesajın silinme animasyonu) */
+/* 🎥 END EFFECT */
 #content.end-effect{
-  transform: translateY(-30px) scale(0.95); /* Hafifçe yukarı kayıp küçülür */
-  filter: blur(12px); /* Yavaşça bulanıklaşır */
-  opacity: 0; /* Tamamen kaybolur */
+  transform:translateY(-30px) scale(0.95);
+  filter:blur(12px);
+  opacity:0;
 }
 
 /* 🎧 MUSIC BUTTON */
@@ -194,44 +195,31 @@ button{
   padding:10px 15px;
   border:none;
   border-radius:10px;
-
-  background:linear-gradient(
-    135deg,
-    #ff4d6d,
-    #4cc9f0
-  );
-
+  background:linear-gradient(135deg,#ff4d6d,#4cc9f0);
   color:white;
   cursor:pointer;
 }
 
-/* 🎬 ENDING (Son yazının başlangıç durumu) */
+/* 🎬 ENDING */
 #ending{
   position:fixed;
   inset:0;
   background:#000;
   color:#fff;
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   font-size:22px;
-
   opacity:0;
   pointer-events:none;
-  
-  transform: scale(0.85); /* Karanlıkta biraz küçük başlar */
-  /* Hem görünürlük hem de büyüme animasyonu */
-  transition: opacity 3s ease, transform 4s ease-out; 
-
+  transform:scale(0.85);
+  transition:opacity 3s ease, transform 4s ease-out; 
   z-index:20;
 }
 
-/* Son yazının ekranda belirdiği an */
-#ending.show {
-  opacity: 1;
-  transform: scale(1);
+#ending.show{
+  opacity:1;
+  transform:scale(1);
 }
 
 /* 🌑 FINAL BLACK SCREEN */
@@ -251,7 +239,6 @@ button{
 <body>
 
 <div id="stars"></div>
-
 <div id="confetti"></div>
 
 <audio id="bgMusic" preload="auto">
@@ -268,23 +255,20 @@ button{
 
   <h2>Bu sayfa sana özel 🔐</h2>
 
-  <p style="
-    font-size:12px;
-    opacity:0.7;
-  ">
+  <p style="font-size:12px; opacity:0.7;">
     İpucu:
     Eski telefon şifren aynı zamanda
     sokak numarası (4 haneli)
   </p>
 
   <input
-  id="pass"
-  type="password"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  maxlength="4"
-  placeholder="Şifre"
->
+    id="pass"
+    type="password"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    maxlength="4"
+    placeholder="Şifre"
+  >
 
   <button onclick="check()">
     Giriş
@@ -305,45 +289,43 @@ button{
   <div>
 
     <h2 style="margin-bottom:18px;">
-     Müziğin ve yıldızların tadını çıkar 
+      Müziğin ve yıldızların tadını çıkar 
     </h2>
 
-<p style="
-  font-size:19px;
-  opacity:0.9;
-  line-height:1.9;
-  margin:0 auto;
-  max-width:650px;
-  padding:0 20px;
-  letter-spacing:0.3px;
-  text-align:center;
-">
+    <p style="
+      font-size:19px;
+      opacity:0.9;
+      line-height:1.9;
+      margin:0 auto;
+      max-width:650px;
+      padding:0 20px;
+      letter-spacing:0.3px;
+      text-align:center;
+    ">
 
-  <span style="
-    font-size:22px;
-    font-weight:600;
-    display:block;
-    margin-bottom:18px;
-  ">
-    İçimden gelen bir şeydi ve bu şekilde kutlamak istedim.
-  </span>
+      <span style="
+        font-size:22px;
+        font-weight:600;
+        display:block;
+        margin-bottom:18px;
+      ">
+        İçimden gelen bir şeydi ve bu şekilde kutlamak istedim.
+      </span>
 
-  <span style="
-    display:block;
-    margin-bottom:18px;
-  ">
-    Sen de benimkini kutlamıştın 😊
-  </span>
+      <span style="
+        display:block;
+        margin-bottom:18px;
+      ">
+        Sen de benimkini kutlamıştın 😊
+      </span>
 
-  <span style="
-    display:block;
-  ">
-    Vedaları hiç sevmem...
-    Bu da bir veda sayılmaz ama
-    kendine çok iyi bak çatlak fıstığım...
-  </span>
+      <span style="display:block;">
+        Vedaları hiç sevmem...
+        Bu da bir veda sayılmaz ama
+        kendine çok iyi bak çatlak fıstığım...
+      </span>
 
-</p>
+    </p>
 
   </div>
 
@@ -351,126 +333,139 @@ button{
 
 <div id="fadeBlack"></div>
 
-<button id="musicBtn"
-onclick="toggleMusic()">
-🎧 Müziği Başlat
+<button id="musicBtn" onclick="toggleMusic()">
+  🎧 Müziği Başlat
 </button>
 
 <script>
 
-// 📊 DETAYLI FIREBASE LOG SİSTEMİ
-const DB_URL = "https://dogum-d1b8a-default-rtdb.europe-west1.firebasedatabase.app/logs";
+// 📊 FIREBASE LOG
+const DB_URL =
+"https://dogum-d1b8a-default-rtdb.europe-west1.firebasedatabase.app/logs";
 
-// sayaç
 let logCounter = 1;
 
 function logAction(actionName, extraData = {}) {
 
   const now = new Date();
 
-  // tarih formatı
   const tarih =
     now.getFullYear() + "-" +
     String(now.getMonth()+1).padStart(2,"0") + "-" +
     String(now.getDate()).padStart(2,"0");
 
-  // saat formatı
   const saat =
     String(now.getHours()).padStart(2,"0") + "-" +
     String(now.getMinutes()).padStart(2,"0") + "-" +
     String(now.getSeconds()).padStart(2,"0");
 
-  // firebase kayıt adı
+  const safeAction =
+    actionName
+    .replace(/\s+/g,"_")
+    .replace(/[^\wğüşıöçĞÜŞİÖÇ_-]/g,"");
+
   const key =
-    `${logCounter}_${actionName}_${tarih}_${saat}`;
+    `${Date.now()}_${logCounter}_${safeAction}_${tarih}_${saat}`;
 
   logCounter++;
 
   fetch(`${DB_URL}/${encodeURIComponent(key)}.json`,{
     method:"PUT",
     body:JSON.stringify({
-      time: now.toLocaleString('tr-TR'),
-      action: actionName,
-      detail: extraData,
-      device: navigator.userAgent,
-      screen: `${window.innerWidth}x${window.innerHeight}`,
-      isInstagram: navigator.userAgent.includes("Instagram")
+      time:now.toLocaleString('tr-TR'),
+      action:actionName,
+      detail:extraData,
+      device:navigator.userAgent,
+      screen:`${window.innerWidth}x${window.innerHeight}`,
+      isInstagram:navigator.userAgent.includes("Instagram"),
+      isWhatsApp:navigator.userAgent.includes("WhatsApp")
     })
-  }).catch(()=>{})
+  }).catch(()=>{});
 }
 
-async function logVisitWithLocation() {
-  try {
-    const response = await fetch('https://ipapi.co/json/');
+async function logVisitWithLocation(){
+  try{
+    const response = await fetch("https://ipapi.co/json/");
     const data = await response.json();
-    logAction("Sayfaya Girildi", {
-      city: data.city,
-      region: data.region,
-      country: data.country_name,
-      isp: data.org
+
+    logAction("Sayfaya Girildi",{
+      city:data.city,
+      region:data.region,
+      country:data.country_name,
+      isp:data.org
     });
-  } catch (error) {
-    logAction("Sayfaya Girildi", { note: "Lokasyon alınamadı" });
+
+  }catch(error){
+    logAction("Sayfaya Girildi",{
+      note:"Lokasyon alınamadı"
+    });
   }
 }
 
-// Kullanıcı sayfadan çıkarsa veya sekmeyi arka plana atarsa (Instagram içi tarayıcı uyumlu)
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === 'hidden') {
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState === "hidden"){
     logAction("Sayfadan Çıktı / Arka Plana Attı");
   }
 });
 
-
 // 🌌 YILDIZLAR
 function createStars(){
 
-  const stars=document.getElementById("stars");
+  const stars =
+  document.getElementById("stars");
 
   for(let i=0;i<140;i++){
 
-    let star=document.createElement("div");
+    const wrap =
+    document.createElement("div");
+
+    wrap.classList.add("star-wrap");
+
+    wrap.style.left =
+    Math.random()*100 + "vw";
+
+    wrap.style.top =
+    Math.random()*100 + "vh";
+
+    const star =
+    document.createElement("div");
 
     star.classList.add("star");
 
-    let size=Math.random()*3;
+    const size =
+    Math.random()*3 + 1;
 
-    star.style.width=size+"px";
-    star.style.height=size+"px";
+    star.style.width =
+    size + "px";
 
-    star.style.left=Math.random()*100+"vw";
-    star.style.top=Math.random()*100+"vh";
+    star.style.height =
+    size + "px";
 
-    star.style.animationDuration=
-      (2+Math.random()*4)+"s";
+    star.style.animationDuration =
+    (2 + Math.random()*4) + "s";
 
-    stars.appendChild(star);
+    wrap.appendChild(star);
+    stars.appendChild(wrap);
   }
 }
 
 createStars();
-  
-  
-  // ✨ TOUCH STAR EFFECT (IOS + ANDROID)
 
-let touchX = -9999;
-let touchY = -9999;
-
+// ✨ TOUCH STAR EFFECT
 function moveStars(x,y){
 
-  const allStars =
-  document.querySelectorAll(".star");
-
-  allStars.forEach(star=>{
+  document
+  .querySelectorAll(".star-wrap")
+  .forEach(star=>{
 
     const rect =
     star.getBoundingClientRect();
 
     const starX =
-    rect.left + rect.width/2;
+    rect.left + rect.width / 2;
 
     const starY =
-    rect.top + rect.height/2;
+    rect.top + rect.height / 2;
 
     const dx = starX - x;
     const dy = starY - y;
@@ -478,11 +473,10 @@ function moveStars(x,y){
     const distance =
     Math.sqrt(dx*dx + dy*dy);
 
-    // sadece yakın yıldızlar etkilenir
-    if(distance < 120){
+    if(distance > 0 && distance < 130){
 
       const force =
-      (120 - distance) / 12;
+      (130 - distance) / 9;
 
       const moveX =
       (dx / distance) * force;
@@ -491,94 +485,119 @@ function moveStars(x,y){
       (dy / distance) * force;
 
       star.style.transform =
-      `translate(${moveX}px,${moveY}px) scale(1.4)`;
-
-      star.style.opacity = "1";
+      `translate(${moveX}px,${moveY}px)`;
 
     }else{
 
       star.style.transform =
-      "translate(0px,0px) scale(1)";
-
-      star.style.opacity = "";
+      "translate(0,0)";
     }
-
   });
 }
 
-// 📱 TOUCH
-document.addEventListener(
-  "touchmove",
-  e=>{
+document.addEventListener("touchmove",e=>{
+  const touch = e.touches[0];
 
-    const touch =
-    e.touches[0];
-
-    touchX = touch.clientX;
-    touchY = touch.clientY;
-
-    moveStars(touchX,touchY);
-
-  },
-  { passive:true }
-);
-
-// 🖱️ MOUSE
-document.addEventListener(
-  "mousemove",
-  e=>{
-
-    touchX = e.clientX;
-    touchY = e.clientY;
-
-    moveStars(touchX,touchY);
-
+  if(touch){
+    moveStars(touch.clientX,touch.clientY);
   }
-);
+},{passive:true});
 
-// ✨ parmak çekilince yıldızlar normale dönsün
-document.addEventListener(
-  "touchend",
-  resetStars
-);
-
-document.addEventListener(
-  "mouseleave",
-  resetStars
-);
+document.addEventListener("mousemove",e=>{
+  moveStars(e.clientX,e.clientY);
+});
 
 function resetStars(){
-
   document
-  .querySelectorAll(".star")
+  .querySelectorAll(".star-wrap")
   .forEach(star=>{
-
-    star.style.transform =
-    "translate(0px,0px) scale(1)";
+    star.style.transform = "translate(0,0)";
   });
 }
 
+document.addEventListener("touchend",resetStars);
+document.addEventListener("mouseleave",resetStars);
 
+// ☄️ KAYAN YILDIZ
+function createShootingStar(){
 
+  const star =
+  document.createElement("div");
+
+  star.classList.add("shooting-star");
+
+  const startX =
+  20 + Math.random()*90;
+
+  const startY =
+  Math.random()*55;
+
+  const moveX =
+  -120 - Math.random()*50;
+
+  const moveY =
+  60 + Math.random()*40;
+
+  const duration =
+  3000 + Math.random()*2500;
+
+  star.style.left =
+  startX + "vw";
+
+  star.style.top =
+  startY + "vh";
+
+  star.animate([
+    {
+      opacity:0,
+      transform:"translate3d(0,0,0) rotate(-25deg) scale(0.8)"
+    },
+    {
+      opacity:1,
+      offset:0.12
+    },
+    {
+      opacity:1,
+      offset:0.75
+    },
+    {
+      opacity:0,
+      transform:`translate3d(${moveX}vw,${moveY}vh,0) rotate(-25deg) scale(1)`
+    }
+  ],{
+    duration:duration,
+    easing:"linear",
+    fill:"forwards"
+  });
+
+  document.body.appendChild(star);
+
+  setTimeout(()=>{
+    star.remove();
+  },duration + 200);
+}
 
 // 🎉 CONFETTI
 function createConfetti(){
 
   for(let i=0;i<45;i++){
 
-    let c=document.createElement("div");
+    let c =
+    document.createElement("div");
 
     c.classList.add("confetti");
 
-    c.style.left=Math.random()*100+"vw";
+    c.style.left =
+    Math.random()*100 + "vw";
 
-    c.style.background=randomColor();
+    c.style.background =
+    randomColor();
 
-    c.style.animationDuration=
-      (4+Math.random()*4)+"s";
+    c.style.animationDuration =
+    (4 + Math.random()*4) + "s";
 
-    c.style.animationDelay=
-      Math.random()*2+"s";
+    c.style.animationDelay =
+    Math.random()*2 + "s";
 
     document.body.appendChild(c);
   }
@@ -618,7 +637,6 @@ Bir daha seni rahatsız etmeyeceğimi söylemiştim ama doğum günün senin iç
 Rahatsız ettiysem özür dilerim.
 `;
 
-// ✍️ TYPE EFFECT
 let i = 0;
 
 let textEl =
@@ -628,7 +646,8 @@ function type(){
 
   if(i < message.length){
 
-    let char = message[i];
+    let char =
+    message[i];
 
     if(char === "\n"){
       textEl.innerHTML += "<br>";
@@ -641,67 +660,65 @@ function type(){
     setTimeout(type,90);
 
   }else{
-    // Daktilo efekti bittiğinde Firebase'e bildir
-    logAction("Mesaj Okundu (Daktilo Bitti)");
+
+    logAction("Mesaj Okundu / Daktilo Bitti");
+
     setTimeout(showEnding,2500);
   }
 }
 
-// 🎬 ENDING (Geçiş Animasyonu)
+// 🎬 ENDING
 function showEnding(){
 
-  const end = document.getElementById("ending");
-  const content = document.getElementById("content");
+  const end =
+  document.getElementById("ending");
 
-  // 1. Ana metni yavaşça yukarı kaydırarak ve bulanıklaştırarak sil
+  const content =
+  document.getElementById("content");
+
   content.classList.add("end-effect");
 
-  // 2. Ana metin tamamen kaybolduktan sonra bitiş yazısını getir
-  setTimeout(() => {
+  setTimeout(()=>{
 
     end.classList.add("show");
 
-  }, 2500);
+  },2500);
 
-  // 3. Bitiş yazısı bir süre ekranda kalsın
-  setTimeout(() => {
+  setTimeout(()=>{
 
-    // Yazıyı kapat
     end.classList.remove("show");
     end.style.opacity = 0;
 
-    // 🎉 Konfetileri yavaşça gizle
-    document.querySelectorAll(".confetti")
+    document
+    .querySelectorAll(".confetti")
     .forEach(c=>{
       c.style.opacity = "0";
     });
 
-    // Yazı tamamen kaybolunca
-    setTimeout(() => {
+    setTimeout(()=>{
 
-      // İçeriği tamamen kaldır
       content.style.display = "none";
 
-      // Konfetileri DOM'dan tamamen sil
-      document.querySelectorAll(".confetti")
+      document
+      .querySelectorAll(".confetti")
       .forEach(c=>{
         c.remove();
       });
 
-      // 🌌 Yıldız ekranını başlat
-      showStars();  
-  
-    }, 3000);  
-  
-  }, 12000);  
-}  
-      
+      showStars();
+
+    },3000);
+
+  },12000);
+}
 
 // 🌌 STARS SCREEN
+let shootingIntervalStarted = false;
+
 function showStars(){
 
-  // 🎉 Konfetileri kaldır
-  document.querySelectorAll(".confetti")
+  document
+  .querySelectorAll(".confetti")
   .forEach(c=>{
     c.remove();
   });
@@ -709,32 +726,34 @@ function showStars(){
   const stars =
   document.getElementById("stars");
 
-  // 🌌 yıldızları göster
   stars.style.opacity = 1;
 
   logAction("Yıldız Ekranı Açıldı");
-  
-  // ☄️ sürekli kayan yıldız oluştur
-setInterval(()=>{
 
-  createShootingStar();
+  if(!shootingIntervalStarted){
 
-},2500);
-  
+    shootingIntervalStarted = true;
+
+    setInterval(()=>{
+
+      createShootingStar();
+
+    },2500);
+  }
 }
 
 // 🖥️ FULLSCREEN
 function openFullscreen(){
 
-  let elem=document.documentElement;
-  
-  const request=
-    elem.requestFullscreen ||
-    elem.webkitRequestFullscreen ||
-    elem.msRequestFullscreen;
+  let elem =
+  document.documentElement;
+
+  const request =
+  elem.requestFullscreen ||
+  elem.webkitRequestFullscreen ||
+  elem.msRequestFullscreen;
 
   if(request){
-
     request.call(elem).catch(()=>{});
   }
 }
@@ -743,52 +762,58 @@ function openFullscreen(){
 let music =
 document.getElementById("bgMusic");
 
-let musicStarted=false;
+let musicStarted = false;
 
 function toggleMusic(){
 
   if(!musicStarted){
 
-    music.volume=0.4;
-    music.play().catch(()=>{});
-    musicStarted=true;
+    music.volume = 0.4;
 
-    document.getElementById("musicBtn").innerText="⏸ Müziği Durdur";
-    logAction("Müzik Etkileşimi", { durum: "Başlatıldı" }); // Log
+    music.play().catch(()=>{});
+
+    musicStarted = true;
+
+    document.getElementById("musicBtn")
+    .innerText = "⏸ Müziği Durdur";
+
+    logAction("Müzik Etkileşimi",{
+      durum:"Başlatıldı"
+    });
 
   }else{
 
     music.pause();
-    musicStarted=false;
 
-    document.getElementById("musicBtn").innerText="🎧 Müziği Başlat";
-    logAction("Müzik Etkileşimi", { durum: "Durduruldu" }); // Log
+    musicStarted = false;
+
+    document.getElementById("musicBtn")
+    .innerText = "🎧 Müziği Başlat";
+
+    logAction("Müzik Etkileşimi",{
+      durum:"Durduruldu"
+    });
   }
 }
 
-// 🎵 Müzik bitince siteyi sinematik şekilde kapat
-music.addEventListener("ended", ()=>{
+// 🎵 MÜZİK BİTİNCE KAPANIŞ
+music.addEventListener("ended",()=>{
 
   const fade =
   document.getElementById("fadeBlack");
 
-  // 🌑 ekranı yavaşça karart
   fade.style.opacity = "1";
 
-  // 🌌 yıldızları azalt
   document.getElementById("stars")
   .style.opacity = "0";
 
-  // 🎧 müzik butonunu gizle
   document.getElementById("musicBtn")
   .style.opacity = "0";
 
   logAction("Müzik Bitti / Site Kapanıyor");
 
-  // ⏳ siyah ekran sonrası çık
   setTimeout(()=>{
 
-    // fullscreen çık
     if(document.fullscreenElement){
 
       document.exitFullscreen()
@@ -797,54 +822,59 @@ music.addEventListener("ended", ()=>{
     }else if(document.webkitFullscreenElement){
 
       document.webkitExitFullscreen();
-
     }
 
-    // sayfayı kapat
     window.close();
 
-    // kapanmazsa boş sayfaya yönlendir
     setTimeout(()=>{
-      window.location.href="about:blank";
+      window.location.href = "about:blank";
     },1000);
 
   },5000);
-
 });
 
-
-  
-
 // 🚀 INTRO
-window.onload=()=>{
-  
-  // Sayfa yüklendiğinde lokasyon ile logla
+window.onload = ()=>{
+
   logVisitWithLocation();
 
   setTimeout(()=>{
 
-    document.getElementById("intro").style.display="none";
-    document.getElementById("lock").style.display="flex";
+    document.getElementById("intro")
+    .style.display = "none";
+
+    document.getElementById("lock")
+    .style.display = "flex";
 
   },5000);
 };
 
 // 🔐 LOGIN
 function check(){
-  let passValue = document.getElementById("pass").value;
+
+  let passValue =
+  document.getElementById("pass").value;
 
   if(passValue === "3007"){
 
-    logAction("Şifre Doğru - İçeri Girdi"); // Log Başarılı Giriş
+    logAction("Şifre Doğru / İçeri Girdi");
 
     openFullscreen();
 
-    document.getElementById("lock").style.display="none";
-    document.getElementById("content").style.display="flex";
+    document.getElementById("lock")
+    .style.display = "none";
+
+    document.getElementById("content")
+    .style.display = "flex";
+
     type();
 
   }else{
-    logAction("Yanlış Şifre Denendi", { denenenSifre: passValue }); // Log Hatalı Şifre
+
+    logAction("Yanlış Şifre Denendi",{
+      denenenSifre:passValue
+    });
+
     alert("Yanlış şifre ❌");
   }
 }
