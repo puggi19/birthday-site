@@ -87,7 +87,6 @@ body{
   100%{opacity:0.2; transform:scale(1);}
 }
 
-
 /* 🎉 CONFETTI */
 .confetti{
   position:fixed;
@@ -554,7 +553,6 @@ function resetStars(){
 document.addEventListener("touchend",resetStars);
 document.addEventListener("mouseleave",resetStars);
 
-
 // 🎉 CONFETTI
 function createConfetti(){
 
@@ -653,29 +651,6 @@ function type(){
   }else{
 
     typeTimer = null;
-
-    logAction("Mesaj Okundu / Daktilo Bitti");
-
-    setTimeout(showEnding,2500);
-  }
-}
-
-  if(i < message.length){
-
-    let char =
-    message[i];
-
-    if(char === "\n"){
-      textEl.innerHTML += "<br>";
-    }else{
-      textEl.innerHTML += char;
-    }
-
-    i++;
-
-    setTimeout(type,90);
-
-  }else{
 
     logAction("Mesaj Okundu / Daktilo Bitti");
 
@@ -874,7 +849,7 @@ music.addEventListener("ended",()=>{
       document.webkitExitFullscreen();
     }
 
-   resetTyping();
+    resetTyping();
 
     music.currentTime = 0;
     musicStarted = false;
