@@ -29,6 +29,16 @@ body{
   -webkit-text-size-adjust:100%;
 }
 
+/* 🎉 CONFETTI LAYER */
+#confettiLayer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:28;
+  opacity:1;
+  transition:opacity 6s ease;
+}
+
 /* 🌌 YILDIZLAR */
 #stars{
   position:fixed;
@@ -78,12 +88,10 @@ body{
   position:fixed;
   top:-20px;
   pointer-events:none;
-  z-index:28;
   opacity:0.85;
   border-radius:2px;
   animation:confettiFall linear infinite;
-  will-change:transform, opacity;
-  transition:opacity 5s ease;
+  will-change:transform;
 }
 
 @keyframes confettiFall{
@@ -92,11 +100,6 @@ body{
       translateY(-20px)
       translateX(0)
       rotate(0deg);
-    opacity:0;
-  }
-
-  10%{
-    opacity:0.9;
   }
 
   100%{
@@ -104,7 +107,6 @@ body{
       translateY(115vh)
       translateX(var(--drift))
       rotate(720deg);
-    opacity:0;
   }
 }
 
@@ -114,7 +116,6 @@ body{
   left:50%;
   top:50%;
   pointer-events:none;
-  z-index:60;
   opacity:1;
   border-radius:2px;
   animation:confettiBurst 4.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -140,18 +141,6 @@ body{
       rotate(720deg);
     opacity:0;
   }
-}
-
-/* 🎞️ KONFETİ YAVAŞ SÖNME */
-body.confetti-fading .confetti{
-  animation-play-state:paused;
-  opacity:0 !important;
-  transition:opacity 5s ease !important;
-}
-
-body.confetti-fading .confetti-burst{
-  opacity:0 !important;
-  transition:opacity 5s ease !important;
 }
 
 /* 🎬 INTRO */
@@ -317,7 +306,7 @@ button{
 <body>
 
 <div id="stars"></div>
-<div id="confetti"></div>
+<div id="confettiLayer"></div>
 
 <audio id="bgMusic" preload="auto">
   <source src="music.mp3" type="audio/mpeg">
@@ -615,13 +604,13 @@ document.addEventListener("mouseleave",resetStars);
 // 🎉 PROFESSIONAL CONFETTI
 function createConfetti(){
 
-  document.body.classList.remove("confetti-fading");
+  const layer =
+  document.getElementById("confettiLayer");
 
-  document
-  .querySelectorAll(".confetti, .confetti-burst")
-  .forEach(c=>{
-    c.remove();
-  });
+  if(!layer) return;
+
+  layer.innerHTML = "";
+  layer.style.opacity = "1";
 
   createConfettiBurst();
 
@@ -663,13 +652,18 @@ function createConfetti(){
       c.style.borderRadius =
       Math.random() > 0.5 ? "50%" : "2px";
 
-      document.body.appendChild(c);
+      layer.appendChild(c);
     }
 
   },250);
 }
 
 function createConfettiBurst(){
+
+  const layer =
+  document.getElementById("confettiLayer");
+
+  if(!layer) return;
 
   for(let i=0;i<90;i++){
 
@@ -708,7 +702,7 @@ function createConfettiBurst(){
     c.style.borderRadius =
     Math.random() > 0.5 ? "50%" : "2px";
 
-    document.body.appendChild(c);
+    layer.appendChild(c);
 
     setTimeout(()=>{
       c.remove();
@@ -718,23 +712,26 @@ function createConfettiBurst(){
 
 function fadeOutConfetti(callback){
 
-  document.body.classList.add("confetti-fading");
+  const layer =
+  document.getElementById("confettiLayer");
+
+  if(!layer){
+    if(callback) callback();
+    return;
+  }
+
+  layer.style.opacity = "0";
 
   setTimeout(()=>{
 
-    document
-    .querySelectorAll(".confetti, .confetti-burst")
-    .forEach(c=>{
-      c.remove();
-    });
-
-    document.body.classList.remove("confetti-fading");
+    layer.innerHTML = "";
+    layer.style.opacity = "1";
 
     if(callback){
       callback();
     }
 
-  },5000);
+  },6000);
 }
 
 function randomColor(){
