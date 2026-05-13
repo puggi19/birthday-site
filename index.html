@@ -78,11 +78,12 @@ body{
   position:fixed;
   top:-20px;
   pointer-events:none;
-  z-index:35;
+  z-index:28;
   opacity:0.85;
   border-radius:2px;
   animation:confettiFall linear infinite;
   will-change:transform, opacity;
+  transition:opacity 2.5s ease;
 }
 
 @keyframes confettiFall{
@@ -113,7 +114,7 @@ body{
   left:50%;
   top:50%;
   pointer-events:none;
-  z-index:45;
+  z-index:60;
   opacity:1;
   border-radius:2px;
   animation:confettiBurst 1.4s ease-out forwards;
@@ -578,50 +579,58 @@ let confettiStarted = false;
 
 function createConfetti(){
 
-  if(confettiStarted) return;
+  document
+  .querySelectorAll(".confetti, .confetti-burst")
+  .forEach(c=>{
+    c.remove();
+  });
 
   confettiStarted = true;
 
   createConfettiBurst();
 
-  for(let i=0;i<70;i++){
+  setTimeout(()=>{
 
-    let c =
-    document.createElement("div");
+    for(let i=0;i<70;i++){
 
-    c.classList.add("confetti");
+      let c =
+      document.createElement("div");
 
-    const size =
-    4 + Math.random()*7;
+      c.classList.add("confetti");
 
-    c.style.width =
-    size + "px";
+      const size =
+      4 + Math.random()*7;
 
-    c.style.height =
-    (size * (0.6 + Math.random())) + "px";
+      c.style.width =
+      size + "px";
 
-    c.style.left =
-    Math.random()*100 + "vw";
+      c.style.height =
+      (size * (0.6 + Math.random())) + "px";
 
-    c.style.background =
-    randomColor();
+      c.style.left =
+      Math.random()*100 + "vw";
 
-    c.style.animationDuration =
-    (5 + Math.random()*5) + "s";
+      c.style.background =
+      randomColor();
 
-    c.style.animationDelay =
-    Math.random()*3 + "s";
+      c.style.animationDuration =
+      (5 + Math.random()*5) + "s";
 
-    c.style.setProperty(
-      "--drift",
-      (-60 + Math.random()*120) + "px"
-    );
+      c.style.animationDelay =
+      Math.random()*2 + "s";
 
-    c.style.borderRadius =
-    Math.random() > 0.5 ? "50%" : "2px";
+      c.style.setProperty(
+        "--drift",
+        (-60 + Math.random()*120) + "px"
+      );
 
-    document.body.appendChild(c);
-  }
+      c.style.borderRadius =
+      Math.random() > 0.5 ? "50%" : "2px";
+
+      document.body.appendChild(c);
+    }
+
+  },250);
 }
 
 function createConfettiBurst(){
@@ -676,6 +685,30 @@ function createConfettiBurst(){
       c.remove();
     },1500);
   }
+}
+
+function fadeOutConfetti(callback){
+
+  const confettis =
+  document.querySelectorAll(
+    ".confetti, .confetti-burst"
+  );
+
+  confettis.forEach(c=>{
+    c.style.opacity = "0";
+  });
+
+  setTimeout(()=>{
+
+    confettis.forEach(c=>{
+      c.remove();
+    });
+
+    if(callback){
+      callback();
+    }
+
+  },2500);
 }
 
 function randomColor(){
@@ -778,25 +811,13 @@ function showEnding(){
     end.classList.remove("show");
     end.style.opacity = 0;
 
-    document
-    .querySelectorAll(".confetti")
-    .forEach(c=>{
-      c.style.opacity = "0";
-    });
-
-    setTimeout(()=>{
+    fadeOutConfetti(()=>{
 
       content.style.display = "none";
 
-      document
-      .querySelectorAll(".confetti, .confetti-burst")
-      .forEach(c=>{
-        c.remove();
-      });
-
       showStars();
 
-    },3000);
+    });
 
   },12000);
 }
@@ -866,12 +887,6 @@ function startStarCountdown(){
 
 // 🌌 STARS SCREEN
 function showStars(){
-
-  document
-  .querySelectorAll(".confetti, .confetti-burst")
-  .forEach(c=>{
-    c.remove();
-  });
 
   const stars =
   document.getElementById("stars");
