@@ -120,7 +120,8 @@ body{
   z-index:60;
   opacity:1;
   border-radius:2px;
-  animation:confettiBurst 1.4s ease-out forwards;
+  animation:confettiBurst 2.8s 
+  cubic-bezier(0.22, 1, 0.36, 1) forwards;
   will-change:transform, opacity;
 }
 
@@ -235,9 +236,9 @@ button{
   bottom:20px;
   right:20px;
   z-index:40;
-  padding:12px 18px;
+  padding:9px 13px;
   border:none;
-  border-radius:14px;
+  border-radius:11px;
   cursor:pointer;
 
   background:rgba(255,255,255,0.08);
@@ -252,7 +253,7 @@ button{
     0 8px 30px rgba(0,0,0,0.45),
     inset 0 1px 0 rgba(255,255,255,0.08);
 
-  font-size:14px;
+  font-size:12px;
   letter-spacing:0.4px;
 
   transition:
@@ -714,7 +715,7 @@ function createConfettiBurst(){
 
     setTimeout(()=>{
       c.remove();
-    },1500);
+    },3000);
   }
 }
 
