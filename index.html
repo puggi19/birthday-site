@@ -34,7 +34,7 @@ body{
   position:fixed;
   inset:0;
   opacity:0;
-  transition:opacity 3s ease;
+  transition:opacity 2.5s ease;
   pointer-events:none;
   z-index:5;
 }
@@ -83,9 +83,7 @@ body{
   border-radius:2px;
   animation:confettiFall linear infinite;
   will-change:transform, opacity;
-  transition:
-    opacity 6s ease,
-    filter 6s ease;
+  transition:opacity 3s ease;
 }
 
 @keyframes confettiFall{
@@ -700,7 +698,7 @@ function createConfettiBurst(){
 
     setTimeout(()=>{
       c.remove();
-    },4300);
+    },3200);
   }
 }
 
@@ -713,8 +711,6 @@ function fadeOutConfetti(callback){
 
   confettis.forEach(c=>{
     c.style.opacity = "0";
-    c.style.filter = "blur(6px)";
-    c.style.animationPlayState = "running";
   });
 
   setTimeout(()=>{
@@ -727,7 +723,7 @@ function fadeOutConfetti(callback){
       callback();
     }
 
-  },6000);
+  },3000);
 }
 
 function randomColor(){
@@ -826,26 +822,30 @@ function showEnding(){
 
     end.classList.add("show");
 
-  },2200);
+  },2000);
 
   setTimeout(()=>{
 
-    end.classList.remove("show");
-    end.style.opacity = "0";
-
     stars.style.opacity = "1";
 
-    fadeOutConfetti(()=>{
+    setTimeout(()=>{
 
-      content.style.display = "none";
+      end.classList.remove("show");
+      end.style.opacity = "0";
 
-      logAction("Yıldız Ekranı Açıldı");
+      fadeOutConfetti(()=>{
 
-      startStarCountdown();
+        content.style.display = "none";
 
-    });
+        logAction("Yıldız Ekranı Açıldı");
 
-  },12500);
+        startStarCountdown();
+
+      });
+
+    },800);
+
+  },12000);
 }
 
 // ⏳ YILDIZ SAYAÇ
