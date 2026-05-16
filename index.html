@@ -11,8 +11,7 @@ user-scalable=no">
 
 <title>Özel Sayfa</title>
 
-
-  <!-- WhatsApp Link Önizleme -->
+<!-- WhatsApp Link Önizleme -->
 <meta property="og:title" content="Senin için küçük bir sürpriz 🎁">
 <meta property="og:description" content="Doğum günün için hazırlanmış küçük bir şey ">
 <meta property="og:image" content="https://dgkoasya.vercel.app/preview.jpg">
@@ -274,7 +273,6 @@ body{
 #lock button:active{
   transform:scale(0.97);
 }
-
 
 #lock::before{
   content:"";
@@ -1012,6 +1010,8 @@ function startStarCountdown(){
 
         clearInterval(countdownInterval);
         countdownInterval = null;
+
+        closeSiteCinematic();
       }
 
     }else{
@@ -1085,8 +1085,14 @@ function toggleMusic(){
   }
 }
 
-// 🎵 MÜZİK BİTİNCE SİTEDEN ÇIKIŞ
-music.addEventListener("ended",()=>{
+// 🎵 GÜVENLİ SİNEMATİK KAPANIŞ
+let siteClosing = false;
+
+function closeSiteCinematic(){
+
+  if(siteClosing) return;
+
+  siteClosing = true;
 
   const fade =
   document.getElementById("fadeBlack");
@@ -1135,6 +1141,12 @@ music.addEventListener("ended",()=>{
     },1000);
 
   },5000);
+}
+
+music.addEventListener("ended",()=>{
+
+  closeSiteCinematic();
+
 });
 
 // 🚀 INTRO
